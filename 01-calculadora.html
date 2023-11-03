@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Calculadora</title>
+</head>
+<body>
+    <div class="container">
+        <div class="calculadora">
+    
+            <div class="pantalla">
+                <input type="text" id="display" onkeydown="return handleKey(event)">
+            </div>
+
+            <div class="botones">
+                <button onclick="addToDisplay('1')">1</button>
+                <button onclick="addToDisplay('2')">2</button>
+                <button onclick="addToDisplay('3')">3</button>
+                <button onclick="addToDisplay('4')">4</button>
+                <button onclick="addToDisplay('5')">5</button>
+                <button onclick="addToDisplay('6')">6</button>
+                <button onclick="addToDisplay('7')">7</button>
+                <button onclick="addToDisplay('8')">8</button>
+                <button onclick="addToDisplay('9')">9</button>
+                <button onclick="clearDisplay()">C</button>
+                <button onclick="addToDisplay('0')">0</button>
+                <button onclick="calculateResult()">=</button>
+            </div>
+            <div class="calculos">
+                <button onclick="addToDisplay('+')">+</button>
+                <button onclick="addToDisplay('-')">-</button>
+                <button onclick="addToDisplay('*')">*</button>
+                <button onclick="addToDisplay('/')">/</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+
+        window.addEventListener('load', function() {
+            display.focus();
+        });
+
+        function addToDisplay(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function calculateResult() {
+            try {
+                display.value = eval(display.value);
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+        function handleKey(event) {
+            const key = event.key;
+
+            if (key === 'Enter') {
+                calculateResult();
+                event.preventDefault(); // Evita que se agregue un salto de línea en el campo de entrada
+            } else if (!/^\d$|^\+|^-|^\*|^\/$|^Backspace$|^Delete$|^ArrowLeft$|^ArrowRight$/.test(key)) {
+                event.preventDefault(); // Evita que se ingrese el carácter no deseado
+                alert("solo números y operaciones");
+            }
+        }
+    </script>
+</body>
+</html>
