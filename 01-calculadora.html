@@ -45,17 +45,21 @@
 
         function addToDisplay(value) {
             display.value += value;
+            display.focus();
         }
 
         function clearDisplay() {
             display.value = '';
+            display.focus();
         }
 
         function calculateResult() {
             try {
                 display.value = eval(display.value);
+                display.focus();
             } catch (error) {
                 display.value = 'Error';
+                display.focus();
             }
         }
         function handleKey(event) {
@@ -63,10 +67,12 @@
 
             if (key === 'Enter') {
                 calculateResult();
-                event.preventDefault(); // Evita que se agregue un salto de línea en el campo de entrada
+                event.preventDefault();
+                display.focus(); // Evita que se agregue un salto de línea en el campo de entrada
             } else if (!/^\d$|^\+|^-|^\*|^\/$|^Backspace$|^Delete$|^ArrowLeft$|^ArrowRight$/.test(key)) {
                 event.preventDefault(); // Evita que se ingrese el carácter no deseado
                 alert("solo números y operaciones");
+                display.focus();
             }
         }
     </script>
