@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #333;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.5;
+            margin: 1rem;
+            padding: 0;
+        }
+        h1{
+            color: white;
+            text-align: center;
+        }
+        .lista{
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+
+        }
+        input[type=text],
+        button{
+            font-size: 16px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            display: inline-block ;
+            align-items: center;
+        }
+        input[type=text]{
+            width: 70%;
+        }
+        button{
+            width: 29%;
+            background-color: darkorange;
+            cursor: pointer;
+        }
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+        }
+        li{
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>To do Task</h1>
+    <div class="lista">
+        <input type="text"  id="new-task-input" placeholder="Escribe una nueva tarea">
+        <button id="add-task-button">Añadir Tarea</button>
+
+    </div>
+    <ul id="tasks-list">
+
+
+    </ul>
+
+    
+    <script>
+        // Función que se ejecuta al cargar la página para cargar tareas guardadas.
+        window.onload = function(){
+            const savedTasks = JSON.parse(localStorage.getItem("tasks")) || []; 
+            app.tasks = savedTasks.map((task)=>{
+                return createTask(task.title, task.isCompleted);
+            });
+            app.tasks.forEach((task)=>{
+                return addTaskToList(task, app.taskList);
+            });
+        }
+    
+        // Función que guarda las tareas en el almacenamiento local.
+        function saveTaskToLocalStorage(tasks) {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+    
+        // Función que crea una nueva tarea con un título y estado predeterminado.
+        function createTask(title, isCompleted = false) {
+            return {
+                id: Date.now(),
+                title,
+                isCompleted,
+            };
+        }
+    
+        // Función que agrega una tarea a la lista de tareas y actualiza el almacenamiento local.
+        function addTaskToList(task, taskList) {
+            const taskElement = createTaskElement(task);
+            taskList.appendChild(taskElement);
+        }
+    
+        // Función que elimina una tarea de la lista y actualiza el almacenamiento local.
+        function removeTaskFromList(taskElement, task) {
+            taskList.removeChild(taskElement);
+    
+            const taskIndex = app.tasks.indexOf(task);
+            if (taskIndex > -1) {
+                app.tasks.splice(taskIndex, 1);
+                saveTaskToLocalStorage(app.tasks);
+            }
+        }
+    
+        // Función que agrega una nueva tarea a la lista y la guarda en el almacenamiento local.
+        function addTask(app) {
+            const newTaskTitle = app.newTaskInput.value;
+            const newTask = createTask(newTaskTitle);
+            app.tasks.push(newTask);
+            saveTaskToLocalStorage(app.tasks);
+            addTaskToList(newTask, app.taskList);
+            app.newTaskInput.value = "";
+        }
+    
+        // Función que crea un elemento de tarea HTML con casillas de verificación y botones.
+        function createTaskElement(task) {
+            const taskElement = document.createElement("li");
+            const taskCheckbox = document.createElement("input");
+            taskCheckbox.type = "checkbox";
+            taskCheckbox.checked = task.isCompleted;
+            taskCheckbox.addEventListener("change", () => {
+                task.isCompleted = taskCheckbox.checked;
+                taskText.classList.toggle("completed", task.isCompleted);
+                saveTaskToLocalStorage(app.tasks);
+            });
+    
+            const taskText = document.createElement("span");
+            taskText.textContent = task.title;
+            taskElement.classList.toggle("completed", task.isCompleted);
+    
+            const taskDeletedButton = document.createElement("button");
+            taskDeletedButton.textContent = "Eliminar";
+            taskDeletedButton.className = "delete-button";
+            taskDeletedButton.addEventListener("click", () => {
+                removeTaskFromList(taskElement, task);
+            });
+    
+            taskElement.appendChild(taskCheckbox);
+            taskElement.appendChild(taskText);
+            taskElement.appendChild(taskDeletedButton);
+    
+            return taskElement;
+        }
+    
+        // Manejador de eventos que agrega una tarea cuando se hace clic en el botón de añadir.
+        addTaskButton.addEventListener("click", () => {
+            addTask(app);
+        });
+    
+        // Manejador de eventos que agrega una tarea cuando se presiona la tecla Enter en el campo de entrada.
+        newTaskInput.addEventListener("keydown" , (event) => {
+            if(event.key === "Enter"){
+                addTask(app);
+            }
+        });
+    </script>
+    
+    
+</body>
+</html>

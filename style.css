@@ -24,10 +24,7 @@ box-shadow: inset 8px 7px 12px -5px rgba(255,255,255,0.56);
     height: 50px;
     border-radius: 10px;
 }
-.calculadora .pantalla #display:focus{
-    
-    
-}
+
 
 .calculadora .botones{
     display: grid;
@@ -48,3 +45,5 @@ box-shadow: inset 8px 7px 12px -5px rgba(255,255,255,0.56);
     background-color: #434343;
     color: white;
 }
+
+
